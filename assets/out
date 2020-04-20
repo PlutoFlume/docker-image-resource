@@ -154,8 +154,9 @@ elif [ -n "$build" ]; then
   cache_from_args=()
 
   if [ "$cache" = "true" ]; then
-    docker_pull "${repository}:${cache_tag}"
-    cache_from_args+=("--cache-from ${repository}:${cache_tag}")
+    if docker_pull "${repository}:${cache_tag}"; then
+      cache_from_args+=("--cache-from ${repository}:${cache_tag}")
+    fi
   fi
 
   if [ -n "$cache_from" ]; then
@@ -225,7 +226,7 @@ elif [ -n "$build" ]; then
   fi
 
   ECR_REGISTRY_PATTERN='/[a-zA-Z0-9][a-zA-Z0-9_-]*\.dkr\.ecr\.[a-zA-Z0-9][a-zA-Z0-9_-]*\.amazonaws\.com(\.cn)?[^ ]*/'
-  ecr_images=$(grep '^\s*FROM' ${dockerfile} | \
+  ecr_images=$(egrep '^\s*FROM|^\s*ARG' ${dockerfile} | \
              awk "match(\$0,${ECR_REGISTRY_PATTERN}){print substr(\$0, RSTART, RLENGTH)}" )
   if [ -n "$ecr_images" ]; then
     for ecr_image in $ecr_images
@@ -283,7 +284,7 @@ if [ -e /tmp/push-failed ]; then
   exit 1
 fi
 
-digest="$(tail -1 push-output | awk '{print $3}')"
+digest="$(grep 'digest' push-output | awk '{print $3}')"
 
 if [ "$need_tag_as_latest" = "true" ] && [ "${tag_name}" != "latest"  ]; then
   docker tag "${repository}:${tag_name}" "${repository}:latest"
