@@ -1,4 +1,7 @@
-This fork adds the ability to build a Docker config.json into the image.
-We use this to default to using the ecr-login credential helper for all our AWS account's registries.
+A default Docker `config.json` is provided.
 
-To build this project first retrieve the config.json from 1Password, place it in the project root, and then build the docker image.
+You may replace it with a custom version before building the image,
+for example if you wish to use
+[credHelpers](https://docs.docker.com/engine/reference/commandline/login/#credential-helpers)
+to log in to multiple docker registries.
+
