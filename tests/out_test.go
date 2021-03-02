@@ -74,7 +74,7 @@ var _ = Describe("Out", func() {
 			},
 		}, map[string]string{
 			"STARTUP_TIMEOUT": "5",
-			"FAIL_ONCE": "true",
+			"FAIL_ONCE":       "true",
 		})
 
 		Expect(session.Err).To(gbytes.Say("(?s:DOCKERD.*DOCKERD.*)"))
@@ -90,7 +90,7 @@ var _ = Describe("Out", func() {
 			},
 		}, map[string]string{
 			"STARTUP_TIMEOUT": "1",
-			"FAIL_ONCE": "true",
+			"FAIL_ONCE":       "true",
 		})
 
 		Expect(session.Err).To(gbytes.Say(".*Docker failed to start.*"))
@@ -220,14 +220,13 @@ var _ = Describe("Out", func() {
 					},
 				},
 			}, map[string]string{
-				"BUILD_ID":		"value of the:\nBUILD_ID envvar",
-				"BUILD_NAME":		"value of the:\nBUILD_NAME envvar",
-				"BUILD_JOB_NAME":	"value of the:\nBUILD_JOB_NAME envvar",
-				"BUILD_PIPELINE_NAME":	"value of the:\nBUILD_PIPELINE_NAME envvar",
-				"BUILD_TEAM_NAME":	"value of the:\nBUILD_TEAM_NAME envvar",
-				"ATC_EXTERNAL_URL":	"value of the:\nATC_EXTERNAL_URL envvar",
+				"BUILD_ID":            "value of the:\nBUILD_ID envvar",
+				"BUILD_NAME":          "value of the:\nBUILD_NAME envvar",
+				"BUILD_JOB_NAME":      "value of the:\nBUILD_JOB_NAME envvar",
+				"BUILD_PIPELINE_NAME": "value of the:\nBUILD_PIPELINE_NAME envvar",
+				"BUILD_TEAM_NAME":     "value of the:\nBUILD_TEAM_NAME envvar",
+				"ATC_EXTERNAL_URL":    "value of the:\nATC_EXTERNAL_URL envvar",
 			})
-
 
 			Expect(session.Err).To(gbytes.Say(dockerarg(`--build-arg`)))
 			Expect(session.Err).To(gbytes.Say(dockerarg(`arg01=no envvars`)))
@@ -501,38 +500,38 @@ var _ = Describe("Out", func() {
 		})
 
 		It("should push all tags to all repositories", func() {
-		    session := put(map[string]interface{}{
-		        "source": map[string]interface{}{
-		            "repository": "test",
-		        },
-		        "params": map[string]interface{}{
-					"build": "/docker-image-resource/tests/fixtures/build",
-					"tag":   "/docker-image-resource/tests/fixtures/tag",
-					"additional_tags": "/docker-image-resource/tests/fixtures/tags"
+			session := put(map[string]interface{}{
+				"source": map[string]interface{}{
+					"repository": "test",
+				},
+				"params": map[string]interface{}{
+					"build":           "/docker-image-resource/tests/fixtures/build",
+					"tag":             "/docker-image-resource/tests/fixtures/tag",
+					"additional_tags": "/docker-image-resource/tests/fixtures/tags",
 					"mirror_repositories": []interface{}{
 						map[string]string{
 							"repository": "mirror1",
 						},
 					},
 				},
-		    })
+			})
 
-		    Expect(session.Err).To(gbytes.Say(docker(`push test:foo`))
-		    Expect(session.Err).To(gbytes.Say(docker(`tag test:foo test:a`))
-		    Expect(session.Err).To(gbytes.Say(docker(`push test:a`))
-		    Expect(session.Err).To(gbytes.Say(docker(`tag test:foo test:b`))
-		    Expect(session.Err).To(gbytes.Say(docker(`push test:b`))
-		    Expect(session.Err).To(gbytes.Say(docker(`tag test:foo test:c`))
-		    Expect(session.Err).To(gbytes.Say(docker(`push test:c`))
+			Expect(session.Err).To(gbytes.Say(docker(`push test:foo`)))
+			Expect(session.Err).To(gbytes.Say(docker(`tag test:foo test:a`)))
+			Expect(session.Err).To(gbytes.Say(docker(`push test:a`)))
+			Expect(session.Err).To(gbytes.Say(docker(`tag test:foo test:b`)))
+			Expect(session.Err).To(gbytes.Say(docker(`push test:b`)))
+			Expect(session.Err).To(gbytes.Say(docker(`tag test:foo test:c`)))
+			Expect(session.Err).To(gbytes.Say(docker(`push test:c`)))
 
-		    Expect(session.Err).To(gbytes.Say(docker(`tag test:foo mirror1:foo`))
-		    Expect(session.Err).To(gbytes.Say(docker(`push mirror1:foo`))
-		    Expect(session.Err).To(gbytes.Say(docker(`tag test:foo mirror1:a`))
-		    Expect(session.Err).To(gbytes.Say(docker(`push mirror1:a`))
-		    Expect(session.Err).To(gbytes.Say(docker(`tag test:foo mirror1:b`))
-		    Expect(session.Err).To(gbytes.Say(docker(`push mirror1:b`))
-		    Expect(session.Err).To(gbytes.Say(docker(`tag test:foo mirror1:c`))
-		    Expect(session.Err).To(gbytes.Say(docker(`push mirror1:c`))
+			Expect(session.Err).To(gbytes.Say(docker(`tag test:foo mirror1:foo`)))
+			Expect(session.Err).To(gbytes.Say(docker(`push mirror1:foo`)))
+			Expect(session.Err).To(gbytes.Say(docker(`tag test:foo mirror1:a`)))
+			Expect(session.Err).To(gbytes.Say(docker(`push mirror1:a`)))
+			Expect(session.Err).To(gbytes.Say(docker(`tag test:foo mirror1:b`)))
+			Expect(session.Err).To(gbytes.Say(docker(`push mirror1:b`)))
+			Expect(session.Err).To(gbytes.Say(docker(`tag test:foo mirror1:c`)))
+			Expect(session.Err).To(gbytes.Say(docker(`push mirror1:c`)))
 		})
 	})
 
@@ -611,8 +610,8 @@ var _ = Describe("Out", func() {
 					"repository": "test",
 				},
 				"params": map[string]interface{}{
-					"build":      "/docker-image-resource/tests/fixtures/build",
-					"cache":      "true",
+					"build": "/docker-image-resource/tests/fixtures/build",
+					"cache": "true",
 				},
 			})
 			Expect(session.Err).To(gbytes.Say(dockerarg(`--cache-from`)))
@@ -625,8 +624,8 @@ var _ = Describe("Out", func() {
 					"repository": "broken-repo",
 				},
 				"params": map[string]interface{}{
-					"build":     "/docker-image-resource/tests/fixtures/build",
-					"cache":      "true",
+					"build": "/docker-image-resource/tests/fixtures/build",
+					"cache": "true",
 				},
 			})
 
@@ -635,7 +634,7 @@ var _ = Describe("Out", func() {
 			Expect(session.Err).To(gbytes.Say(dockerarg(`build`)))
 
 		})
-	});
+	})
 
 	Context("when cache_from images are specified", func() {
 		BeforeEach(func() {
@@ -662,7 +661,7 @@ var _ = Describe("Out", func() {
 			session := put(map[string]interface{}{
 				"source": map[string]interface{}{
 					"repository": "test",
-				}, 
+				},
 				"params": map[string]interface{}{
 					"build":      "/docker-image-resource/tests/fixtures/build",
 					"cache_from": []string{"cache_from_1", "cache_from_2"},
