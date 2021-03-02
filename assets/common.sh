@@ -41,7 +41,7 @@ sanitize_cgroups() {
     fi
   done
 
-  if ! test -e /sys/fs/cgroup/systemd ; then
+  if [ ! -e /sys/fs/cgroup/systemd ] && [ $(cat /proc/self/cgroup | grep '^1:name=openrc:' | wc -l) -eq 0 ]; then
     mkdir /sys/fs/cgroup/systemd
     mount -t cgroup -o none,name=systemd none /sys/fs/cgroup/systemd
   fi
@@ -94,6 +94,7 @@ start_docker() {
   trap stop_docker EXIT
 
   if ! timeout ${STARTUP_TIMEOUT} bash -ce 'while true; do try_start && break; done'; then
+    [ -f "$LOG_FILE" ] && cat "${LOG_FILE}"
     echo Docker failed to start within ${STARTUP_TIMEOUT} seconds.
     return 1
   fi
